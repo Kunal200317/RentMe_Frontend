@@ -228,7 +228,7 @@ export default function BookingWaiting() {
               <div className="flex items-center justify-center gap-2 text-blue-700">
                 <span>⏳</span>
                 <p className="text-sm">
-                  We're waiting for the owner to accept your booking request
+                  We&apos;re waiting for the owner to accept your booking request
                 </p>
               </div>
             </div>
