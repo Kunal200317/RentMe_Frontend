@@ -28,7 +28,12 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    if (pathname === "/" || pathname.startsWith("/login") || pathname.startsWith("/verify")) {
+    const isHome = pathname === "/";
+    const navBg = isHome 
+        ? (scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg text-gray-900 border-b border-gray-200/50' : 'bg-transparent text-white border-transparent')
+        : 'bg-white/95 backdrop-blur-md shadow-lg text-gray-900 border-b border-gray-200/50';
+
+    if (pathname.startsWith("/login") || pathname.startsWith("/verify")) {
         return null;
     }
 
@@ -73,49 +78,49 @@ export default function Navbar() {
         { href: "/", label: "Home", icon: <Home size={18} /> },
         { href: "/vehicles", label: "Vehicles", icon: <Car size={18} /> },
         { href: "/dashboard", label: "Map View", icon: <Map size={18} /> },
-        ...(!isOwner ? [{ href: "/your-bookings", label: "Bookings", icon: <Calendar size={18} /> }] : [])
+        ...(data && !isOwner ? [{ href: "/your-bookings", label: "Bookings", icon: <Calendar size={18} /> }] : [])
     ];
 
     return (
         <>
             {/* Navbar */}
-            <nav className={`sticky top-0 left-0 w-full z-[1000] transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-white'} border-b border-gray-200/50`}>
-                <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+            <nav className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-500 ${navBg}`}>
+                <div className="max-w-7xl mx-auto flex justify-between items-center px-4 md:px-6 py-2 md:py-2.5">
                     {/* Left: Logo with better styling */}
                     <Link href="/" className="flex items-center gap-2 group hover:scale-105 transition-transform duration-300">
-                        <div className="relative w-8 h-8">
+                        <div className="relative w-8 h-8 md:w-10 md:h-10">
                             <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg transform group-hover:rotate-12 transition-all duration-300 shadow-md"></div>
-                            <Car className="relative z-10 w-6 h-6 text-white m-1 group-hover:scale-110 transition-transform duration-300" />
+                            <Car className="relative z-10 w-6 h-6 md:w-7 md:h-7 text-white m-1 md:m-1.5 group-hover:scale-110 transition-transform duration-300" />
                         </div>
-                        <span className="text-xl font-bold text-orange-600">
+                        <span className={`text-xl md:text-2xl font-bold transition-colors duration-300 ${isHome && !scrolled ? 'text-white' : 'text-orange-600'}`}>
                             RentMe
                         </span>
                     </Link>
 
                     {/* Center: Navigation Links */}
-                    <div className="hidden md:flex items-center gap-1 bg-gray-100/80 rounded-full p-1 backdrop-blur-sm">
+                    <div className={`hidden md:flex items-center gap-1 rounded-full p-1 backdrop-blur-sm transition-all duration-300 ${isHome && !scrolled ? 'bg-white/10' : 'bg-gray-100/80'}`}>
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${isActive(link.href)
-                                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md'
-                                    : 'text-gray-700 hover:bg-white hover:text-orange-500'
+                                className={`flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-300 ${isActive(link.href)
+                                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg scale-105'
+                                    : (isHome && !scrolled ? 'text-white hover:bg-white/20' : 'text-gray-700 hover:bg-white hover:text-orange-500 hover:shadow-sm')
                                     }`}
                             >
                                 <span className={`transition-transform duration-300 ${isActive(link.href) ? 'scale-110' : ''}`}>
                                     {link.icon}
                                 </span>
-                                <span className="font-medium">{link.label}</span>
+                                <span className="font-semibold tracking-wide">{link.label}</span>
                             </Link>
                         ))}
                     </div>
 
                     {/* Right: User Actions */}
-                    <div className="flex items-center gap-4">
-                        {data && (
-                            <>
-                                {/* Owner Panel Dropdown */}
+                    <div className="flex items-center gap-2 md:gap-4">
+                        {data ? (
+                            <div className="hidden md:flex items-center gap-4">
+                                {/* Owner Panel Dropdown (Desktop) */}
                                 {isOwner && (
                                     <div className="relative">
                                         <button
@@ -173,7 +178,7 @@ export default function Navbar() {
                                     </div>
                                 )}
 
-                                {/* Profile Button with Avatar - Simple Orange Theme */}
+                                {/* Profile Button (Desktop) */}
                                 <div className="relative">
                                     <button
                                         onClick={() => setProfileOpen(true)}
@@ -186,36 +191,171 @@ export default function Navbar() {
                                             {data?.name?.split(' ')[0] || 'Profile'}
                                         </span>
                                     </button>
-
-                                    {/* Active indicator */}
-                                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                                 </div>
-                            </>
+                            </div>
+                        ) : (
+                            <div className="hidden md:flex items-center gap-3">
+                                <Link
+                                    href="/login"
+                                    className={`px-6 py-2.5 font-bold transition-all duration-300 border-b-2 hover:border-orange-500 ${isHome && !scrolled ? 'text-white border-transparent' : 'text-gray-700 border-transparent hover:text-orange-600'}`}
+                                >
+                                    Log In
+                                </Link>
+                                <Link
+                                    href="/login"
+                                    className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-orange-500/30 hover:scale-105 transition-all duration-300 active:scale-95"
+                                >
+                                    Sign Up
+                                </Link>
+                            </div>
                         )}
-                    </div>
-                </div>
 
-                {/* Mobile Navigation */}
-                <div className="md:hidden border-t border-gray-100 mt-2 pt-2">
-                    <div className="flex justify-around items-center px-4">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${isActive(link.href)
-                                    ? 'text-orange-500 bg-orange-50'
-                                    : 'text-gray-600 hover:text-orange-500'
-                                    }`}
-                            >
-                                <div className={`p-2 rounded-full ${isActive(link.href) ? 'bg-orange-100' : ''}`}>
-                                    {link.icon}
-                                </div>
-                                <span className="text-xs mt-1 font-medium">{link.label}</span>
-                            </Link>
-                        ))}
+                        {/* Mobile Menu Toggle */}
+                        <button
+                            onClick={() => setOpen(!open)}
+                            className={`md:hidden p-2.5 rounded-xl transition-all duration-300 ${isHome && !scrolled ? 'bg-white/20 text-white backdrop-blur-md' : 'bg-gray-100 text-gray-700 hover:bg-orange-100 hover:text-orange-600'}`}
+                        >
+                            <Menu size={24} />
+                        </button>
                     </div>
                 </div>
             </nav>
+
+            {/* Mobile Navigation Drawer - Moved OUTSIDE <nav> for full height consistency */}
+            <AnimatePresence>
+                {open && (
+                    <>
+                        {/* Overlay */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setOpen(false)}
+                            className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[1001]"
+                        />
+
+                        {/* Sidebar Content */}
+                        <motion.div
+                            initial={{ x: "100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "100%" }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="md:hidden fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[1002] flex flex-col"
+                        >
+                            <div className="p-8 bg-gradient-to-br from-orange-500 to-orange-600 text-white">
+                                <div className="flex justify-between items-center mb-8">
+                                    <span className="text-2xl font-black tracking-tight">RentMe</span>
+                                    <button onClick={() => setOpen(false)} className="p-2 hover:bg-white/20 rounded-xl transition-colors">
+                                        ✕
+                                    </button>
+                                </div>
+                                
+                                {data ? (
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl font-black border border-white/30">
+                                            {data?.name?.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-xl leading-tight">{data?.name}</p>
+                                            <p className="text-white/80 text-sm">{data?.email}</p>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        <p className="text-white/90 font-medium">Get started today!</p>
+                                        <div className="flex gap-3">
+                                            <Link
+                                                href="/login"
+                                                onClick={() => setOpen(false)}
+                                                className="flex-1 bg-white text-orange-600 py-3 rounded-xl font-bold text-center shadow-lg"
+                                            >
+                                                Login
+                                            </Link>
+                                            <Link
+                                                href="/login"
+                                                onClick={() => setOpen(false)}
+                                                className="flex-1 bg-orange-700 text-white py-3 rounded-xl font-bold text-center border border-white/20"
+                                            >
+                                                Signup
+                                            </Link>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto p-6 space-y-3 bg-gray-50/50">
+                                {navLinks.map((link) => (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        onClick={() => setOpen(false)}
+                                        className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 ${isActive(link.href)
+                                            ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30 -translate-y-1'
+                                            : 'bg-white text-gray-700 hover:bg-orange-50 hover:text-orange-600 border border-gray-100'
+                                            }`}
+                                    >
+                                        <span className={`${isActive(link.href) ? 'text-white' : 'text-orange-500'}`}>
+                                            {link.icon}
+                                        </span>
+                                        <span className="font-bold text-lg">{link.label}</span>
+                                    </Link>
+                                ))}
+
+                                {/* Owner Tools (Mobile) */}
+                                {isOwner && (
+                                    <div className="mt-8 pt-8 border-t border-gray-200/50 space-y-3">
+                                        <p className="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Ownership Center</p>
+                                        <Link
+                                            href="/owner/booking-order"
+                                            onClick={() => setOpen(false)}
+                                            className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-gray-100 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-300"
+                                        >
+                                            <div className="p-2 rounded-lg bg-blue-50 text-blue-600">
+                                                <ClipboardList size={20} />
+                                            </div>
+                                            <span className="font-bold">Booking Orders</span>
+                                        </Link>
+                                        <Link
+                                            href="/owner/my-vehicles"
+                                            onClick={() => setOpen(false)}
+                                            className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-gray-100 text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-300"
+                                        >
+                                            <div className="p-2 rounded-lg bg-purple-50 text-purple-600">
+                                                <Car size={20} />
+                                            </div>
+                                            <span className="font-bold">My Vehicles</span>
+                                        </Link>
+                                        <div className="px-4 pt-4">
+                                            <Link
+                                                href="/owner/add-vehicle"
+                                                onClick={() => setOpen(false)}
+                                                className="flex items-center justify-center gap-3 w-full p-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-lg shadow-blue-500/20"
+                                            >
+                                                <PlusCircle size={20} />
+                                                <span>Add New Vehicle</span>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="p-8 border-t border-gray-100 bg-white">
+                                {data ? (
+                                    <button
+                                        onClick={handleLogout}
+                                        className="flex items-center justify-center gap-3 w-full p-4 rounded-2xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-300 font-black group"
+                                    >
+                                        <LogOut size={20} className="group-hover:rotate-12 transition-transform" />
+                                        <span>Sign Out</span>
+                                    </button>
+                                ) : (
+                                    <p className="text-center text-gray-400 text-xs font-semibold">Join RentMe for the best experience</p>
+                                )}
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
 
             {/* Profile Drawer - Improved */}
             <AnimatePresence>

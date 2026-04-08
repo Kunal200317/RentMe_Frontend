@@ -107,56 +107,9 @@ const ProRideRentals = () => {
 
   return (
     <div className="bg-white text-gray-900 overflow-x-hidden" style={{ fontFamily: 'Inter, sans-serif' }}>
-      {/* Navigation */}
-      <nav className="absolute top-0 w-full z-50 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="bg-orange-500 p-2 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-            </div>
-            <span className="text-white font-bold text-2xl">RentMe</span>
-          </div>
-
-          <div className="hidden md:flex space-x-8 text-white/90">
-            <a href="#" className="hover:text-white transition">Home</a>
-            <a href="/vehicles" className="hover:text-white transition">Vehicles</a>
-            <a href="#services" className="hover:text-white transition">Services</a>
-            <a href="#" className="hover:text-white transition">About</a>
-            <a href="#" className="hover:text-white transition">Contact</a>
-          </div>
-
-          <div className="flex space-x-4">
-            <button
-              onClick={() => router.push('/login')}
-              className="text-white font-semibold px-4 py-2 hover:text-orange-400 transition"
-            >
-              Login
-            </button>
-            <button
-              onClick={() => router.push('/login')}
-              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-full transition">
-              Sign Up
-            </button>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section with Animations */}
       <section
-        className="relative h-screen w-full flex items-center justify-start bg-cover bg-center overflow-hidden"
+        className="relative min-h-screen w-full flex items-center justify-start bg-cover bg-center overflow-hidden"
         style={{
           backgroundImage: "url('hero-car.jpg')"
         }}
@@ -182,7 +135,7 @@ const ProRideRentals = () => {
             </span>
 
             <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-extrabold leading-tight animate-slide-up-delay-1">
+              <h1 className="text-4xl md:text-6xl font-extrabold leading-tight animate-slide-up-delay-1">
                 Rent Your <br />
                 <span className="text-orange-500 animate-pulse-slow">Perfect Ride</span>
               </h1>
@@ -205,7 +158,7 @@ const ProRideRentals = () => {
           </div>
 
           {/* Quick Booking Form with Animation */}
-          <div className="bg-white rounded-3xl shadow-2xl p-8 space-y-6 self-center animate-slide-up-form">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 space-y-6 self-center animate-slide-up-form">
             <h2 className="text-2xl font-bold text-gray-900">Quick Booking</h2>
             <form onSubmit={handleSearch} className="space-y-5">
               <div>
@@ -224,7 +177,7 @@ const ProRideRentals = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Pickup Date
@@ -269,7 +222,7 @@ const ProRideRentals = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:flex">
           <div className="flex flex-col items-center text-white">
             <span className="text-sm mb-2 opacity-70">Scroll to explore</span>
             <i className="fa-solid fa-chevron-down text-orange-500"></i>

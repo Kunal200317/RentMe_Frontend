@@ -184,7 +184,7 @@ export default function BookingWaiting() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex items-center justify-center p-4 pt-24 md:pt-28">
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
         <div className="w-20 h-20 mx-auto mb-6 relative">
           <div className="absolute inset-0 border-4 border-blue-200 rounded-full"></div>

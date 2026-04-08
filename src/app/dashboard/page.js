@@ -28,6 +28,9 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("distance");
+  const [distanceValue, setDistanceValue] = useState("1");
+  const [distanceUnit, setDistanceUnit] = useState("km");
+  const [findbyKM, setfindbyKM] = useState(1000);
 
   // ✅ Step 1 — Get user location (client-only)
   useEffect(() => {
@@ -52,6 +55,13 @@ export default function Dashboard() {
     );
   }, []);
 
+  useEffect(() => {
+    // Convert to meters for API — added safety fallback to 0
+    const val = parseInt(distanceValue) || 0;
+    const meters = distanceUnit === "km" ? val * 1000 : val;
+    setfindbyKM(meters);
+  }, [distanceValue, distanceUnit]);
+
   // ✅ Step 2 — Fetch nearby vehicles
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -60,7 +70,7 @@ export default function Dashboard() {
       try {
         setLoading(true);
         const res = await API.get(
-          `/vehicles/nearby?lat=${coords.latitude}&lng=${coords.longitude}&maxDistance=5000`
+          `/vehicles/nearby?lat=${coords.latitude}&lng=${coords.longitude}&maxDistance=${findbyKM}`
         );
 
         const data = res.data.vehicles || [];
@@ -89,7 +99,7 @@ export default function Dashboard() {
     };
 
     fetchVehicles();
-  }, [coords]);
+  }, [coords, findbyKM]);
 
   // Filter and sort vehicles
   const filteredAndSortedVehicles = vehicles
@@ -144,7 +154,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 pt-24 md:pt-28">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50">
         <div className="max-w-7xl mx-auto px-4 py-6">
@@ -159,16 +169,44 @@ export default function Dashboard() {
             </div>
             
             {/* Stats */}
-            <div className="flex gap-6 mt-4 md:mt-0">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{vehicles.length}</div>
-                <div className="text-sm text-gray-500">Vehicles</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  {coords ? `${vehicles.length > 0 ? vehicles[0].distance : '0'} km` : '--'}
+            <div className="flex gap-6 mt-4 md:mt-0 flex-col sm:flex-row items-end sm:items-center">
+              {/* Dynamic Distance Selector - Compact & Right Aligned */}
+              <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-xl shadow-sm border border-gray-100 w-fit">
+                <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
+                  <MapPin className="w-4 h-4 text-blue-500" />
+                  <span>Radius:</span>
                 </div>
-                <div className="text-sm text-gray-500">Nearest</div>
+                
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="number"
+                    value={distanceValue}
+                    onChange={(e) => setDistanceValue(e.target.value)}
+                    className="w-16 px-2 py-1 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-xs text-black"
+                  />
+                  
+                  <select 
+                    value={distanceUnit}
+                    onChange={(e) => setDistanceUnit(e.target.value)}
+                    className="px-1.5 py-1 border border-gray-200 rounded-lg bg-gray-50 text-[10px] text-black cursor-pointer font-bold"
+                  >
+                    <option value="km">KM</option>
+                    <option value="m">M</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">{vehicles.length}</div>
+                  <div className="text-sm text-gray-500">Vehicles</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {coords ? `${vehicles.length > 0 ? vehicles[0].distance : '0'} km` : '--'}
+                  </div>
+                  <div className="text-sm text-gray-500">Nearest</div>
+                </div>
               </div>
             </div>
           </div>
@@ -186,7 +224,7 @@ export default function Dashboard() {
                 <h3 className="font-semibold text-gray-800">Filters & Sort</h3>
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Vehicle Type</label>
                   <select 
@@ -216,6 +254,7 @@ export default function Dashboard() {
                   </select>
                 </div>
               </div>
+
             </div>
 
             {/* Vehicle List */}

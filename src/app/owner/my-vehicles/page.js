@@ -38,7 +38,7 @@ export default function MyVehiclesPage() {
     );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 pt-24 md:pt-28">
       <div className="max-w-4xl mx-auto mt-15">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">My Vehicles</h1>

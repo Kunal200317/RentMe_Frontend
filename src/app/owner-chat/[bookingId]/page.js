@@ -203,7 +203,7 @@ export default function OwnerChatPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden pt-20 md:pt-24">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[url('/patterns/chat-bg.svg')] opacity-5"></div>
 

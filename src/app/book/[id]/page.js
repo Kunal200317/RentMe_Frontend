@@ -130,7 +130,7 @@ export default function BookVehicle({ params }) {
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 ">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 px-6 py-6 pt-24 md:pt-28">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className={`
