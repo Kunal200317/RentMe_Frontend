@@ -1,12 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import API from "@/utils/api";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const [showElements, setShowElements] = useState({
     logo: false,
     welcome: false,
@@ -34,7 +36,9 @@ export default function LoginPage() {
     try {
       const res = await API.post("/auth/send-otp", { email });
       setMsg(res.data.message || "OTP sent! Check your email.");
-      router.push(`/verify?email=${encodeURIComponent(email)}`);
+      
+      const verifyUrl = `/verify?email=${encodeURIComponent(email)}${redirect ? `&redirect=${encodeURIComponent(redirect)}` : ""}`;
+      router.push(verifyUrl);
     } catch (err) {
       setMsg(err.response?.data?.message || "Error sending OTP");
     } finally {

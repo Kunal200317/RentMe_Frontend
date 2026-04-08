@@ -16,7 +16,13 @@ export default function ConfirmBooking() {
     const [countdown, setCountdown] = useState(180); // 3 minutes in seconds
     const [countdownActive, setCountdownActive] = useState(true);
 
-    // ✅ PAYMENT TIMEOUT FUNCTION with useCallback
+    // ✅ AUTH GUARD: Redirect if no token
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            router.push(`/login?redirect=/confirm-payment`);
+        }
+    }, [router]);
     const handlePaymentTimeout = useCallback(async () => {
         try {
             const BookingID = localStorage.getItem("bookingId");

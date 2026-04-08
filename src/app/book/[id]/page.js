@@ -22,7 +22,6 @@ export default function BookVehicle({ params }) {
   const [showContent, setShowContent] = useState(false);
   const { data: userData, loading: userLoading, error: userError } = UserProfile();
 
-
   useEffect(() => {
     if (userError) {
       setError("Failed to load user profile");
@@ -30,7 +29,7 @@ export default function BookVehicle({ params }) {
       const userId = userData?.id || userData?._id;
       localStorage.setItem("userId", userId);
     }
-  }, [userData, userLoading,userError]);
+  }, [userData, userLoading, userError]);
 
   useEffect(() => {
     async function fetchVehicle() {
@@ -88,6 +87,17 @@ export default function BookVehicle({ params }) {
   // ✅ Handle booking form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 1. Check if user is logged in
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Please login first to book this ride.");
+      setTimeout(() => {
+        router.push(`/login?redirect=/book/${id}`);
+      }, 1500);
+      return;
+    }
+
     if (!form.startDate || !form.endDate)
       return setError("Please select both dates");
 

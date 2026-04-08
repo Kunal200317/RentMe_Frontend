@@ -102,10 +102,13 @@ export default function VerifyPage() {
                 name, 
                 role 
             });
+            const redirect = searchParams.get('redirect');
             handleLoginSuccess(res.data.user, res.data.token);
             setMsg("✅ Verified successfully!");
             setLoading(false);
-            setTimeout(() => router.push("/vehicles?fresh=true"), 2000);
+            // Redirect to original destination or default
+            const targetUrl = redirect || "/vehicles?fresh=true";
+            setTimeout(() => router.push(targetUrl), 2000);
         } catch (err) {
             setMsg(err.response?.data?.message || "Invalid OTP");
             setLoading(false);
